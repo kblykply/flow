@@ -3,7 +3,7 @@
 
 import { useState, type CSSProperties } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, type Variants, type Transition } from 'framer-motion';
 import clsx from 'clsx';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation, EffectFade } from 'swiper/modules';
@@ -26,9 +26,8 @@ type Slide = {
 export default function ShowcaseSlider({ slides }: { slides: Slide[] }) {
   const [active, setActive] = useState(0);
 
-  // Make arrows & dots black
+  // Swiper renkleri
   const swiperVars: CSSProperties = {
-    // Swiper default blue -> black
     ['--swiper-theme-color' as any]: '#ffffffff',
     ['--swiper-navigation-color' as any]: '#ffffffff',
     ['--swiper-pagination-color' as any]: '#ffffffff',
@@ -36,18 +35,22 @@ export default function ShowcaseSlider({ slides }: { slides: Slide[] }) {
     ['--swiper-pagination-bullet-inactive-opacity' as any]: '0.3',
   };
 
-  const groupVariants = {
+  // Framer Motion easing (cubic-bezier). String 'easeOut' yerine bunu kullanıyoruz.
+  const EASE_OUT: NonNullable<Transition['ease']> = [0.16, 1, 0.3, 1];
+
+  const groupVariants: Variants = {
     hidden: { opacity: 0, y: 20, filter: 'blur(6px)' },
     show: {
       opacity: 1,
       y: 0,
       filter: 'blur(0px)',
-      transition: { duration: 0.6, ease: 'easeOut', staggerChildren: 0.08 },
+      transition: { duration: 0.6, ease: EASE_OUT, staggerChildren: 0.08 },
     },
   };
-  const itemVariants = {
+
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 16 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE_OUT } },
   };
 
   return (
@@ -67,11 +70,11 @@ export default function ShowcaseSlider({ slides }: { slides: Slide[] }) {
         {slides.map((s, idx) => (
           <SwiperSlide key={s.id}>
             <div className="relative h-full w-full overflow-hidden">
-              {/* FULL-BG for every style */}
+              {/* Tüm stiller için tam ekran arkaplan */}
               <BackgroundLayer slide={s} />
 
               {s.style === 'splitRight' ? (
-                // Keep a split layout for composition, but image is now global background
+                // Kompozisyon için sağa split; görsel zaten global BG
                 <div className="relative z-10 grid h-full grid-cols-1 md:grid-cols-2">
                   <div className="order-2 md:order-1 flex items-center">
                     <motion.div
@@ -106,7 +109,7 @@ export default function ShowcaseSlider({ slides }: { slides: Slide[] }) {
                       )}
                     </motion.div>
                   </div>
-                  {/* empty column just to preserve visual split on desktop */}
+                  {/* Masaüstünde görsel bölünmesini korumak için boş kolon */}
                   <div className="order-1 md:order-2" />
                 </div>
               ) : (
@@ -191,10 +194,10 @@ function BackgroundLayer({ slide }: { slide: Slide }) {
         />
       )}
 
-      {/* Global veil so white text reads on all images */}
+      {/* Global karartma: metnin tüm görsellerde okunması için */}
       <div className="absolute inset-0 bg-black/35" />
 
-      {/* Style-specific extra gradients for better contrast */}
+      {/* Stil bazlı ekstra gradyanlar */}
       {slide.style === 'centerDark' && (
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_100%,rgba(0,0,0,0.45),transparent_60%)]" />
       )}
