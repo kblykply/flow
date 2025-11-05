@@ -12,7 +12,9 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/effect-fade';
 
-type Slide = {
+
+
+export type Slide = {
   id: string;
   title: string;
   subtitle?: string;
@@ -22,7 +24,6 @@ type Slide = {
   accentColor?: string;
   style?: 'centerDark' | 'leftLight' | 'splitRight' | 'solid';
 };
-
 export default function ShowcaseSlider({ slides }: { slides: Slide[] }) {
   const [active, setActive] = useState(0);
 

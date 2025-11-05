@@ -1,5 +1,6 @@
 // app/page.tsx
-import ShowcaseSlider from './components/ShowcaseSlider';
+import ShowcaseSlider, { type Slide } from './components/ShowcaseSlider';
+
 import FeatureTicker from './components/FeatureTicker';
 import ProductShowcase from './components/ProductShowcase';
 
@@ -46,7 +47,9 @@ const SLIDES = [
         image: '/flow/product-4.jpg',
 
   },
-];
+] satisfies Slide[];
+
+
 const COLLECTIONS: CollectionItem[] = [
   {
     id: 'co1',
